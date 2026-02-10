@@ -3,7 +3,12 @@ package com.kodilla.rps;
 import java.util.Scanner;
 
 public class UserDialogs {
+
     private static final Scanner sc = new Scanner(System.in);
+
+    private static final int EXIT = -1;
+    private static final int RESTART = 0;
+    private static final int MAX_MOVE = 3;
 
     private static int getRightNumber() {
         int numberOfRounds;
@@ -24,6 +29,7 @@ public class UserDialogs {
         return numberOfRounds;
     }
 
+
     private static char getRightChoice() {
         String choice;
         while (true) {
@@ -35,14 +41,15 @@ public class UserDialogs {
             }
             break;
         }
-
       return choice.toLowerCase().charAt(0);
     }
 
+
     static String getUsername() {
-        System.out.print("\nWelcome to Rock-Papier-Scissors game!\n\nPlease enter your username: ");
+        System.out.print("\nWelcome to Rock-Paper-Scissors game!\n\nPlease enter your username: ");
         return sc.nextLine();
     }
+
 
     static int getNumberOfRounds() {
         System.out.println("How many rounds would you like to play?");
@@ -50,35 +57,33 @@ public class UserDialogs {
     }
 
 
-    static int getNumberOfWonRoundsToEnd() {
-        System.out.println("How many wins ends the game?");
+    static int getNumberOfWinsToEnd() {
+        System.out.println("How many wins end the game?");
         return getRightNumber();
     }
 
 
-    static void checkRounds(int numberOfRounds, int numberOfWonRoundsToEnd) {
-        while (true) {
-            if (numberOfWonRoundsToEnd > numberOfRounds) {
-                System.out.println("Number of wins must be even or smaller than the total number of rounds.");
+    static int getCheckedNumberOfWinsToEnd(int numberOfRounds, int numberOfWinsToEnd) {
+        while (numberOfWinsToEnd > numberOfRounds) {
+                System.out.println("Number of wins must be smaller than or equal to the total number of rounds.");
                 System.out.print("Give the right number: ");
-                numberOfWonRoundsToEnd = getRightNumber();
-                continue;
+                numberOfWinsToEnd = getRightNumber();
             }
-            break;
-        }
+
+        return numberOfWinsToEnd;
     }
 
 
     static void showInstructions() {
         System.out.println("""
-                Key 1 - Rock\s
-                Key 2 - Paper\s
+                Instructions:
+                Key 1 - Rock
+                Key 2 - Paper
                 Key 3 - Scissors
-                x - End of the game\s
+                x - End of the game
                 n - Play again
                 """);
     }
-
 
 
     static int getInput() {
@@ -86,17 +91,20 @@ public class UserDialogs {
         int move;
 
         while (true) {
-            String choice = sc.nextLine();
+            String choice = sc.nextLine().trim();
             if (choice.equalsIgnoreCase("x")) {
-                return -1;
+                return EXIT;
+            }
+            if (choice.equalsIgnoreCase("n")) {
+                return RESTART;
             }
             try {
-                move = Integer.parseInt(choice.trim());
+                move = Integer.parseInt(choice);
             } catch (NumberFormatException e) {
                 System.out.println("It's not a number! Try again.");
                 continue;
             }
-            if (move < 1 || move > 3){
+            if (move < 1 || move > MAX_MOVE) {
                 System.out.println("Choose 1, 2 or 3!");
                 continue;
             }
@@ -113,10 +121,10 @@ public class UserDialogs {
     }
 
 
-    public static void showSummary(String username, int userWonCounter, int computerWonCounter, int drawCounter) {
+    public static void showSummary(String username, int userWinCounter, int computerWinCounter, int drawCounter) {
         System.out.println("-------------------------------------------");
-        System.out.println("Number of rounds won by " + username + ": " + userWonCounter);
-        System.out.println("Number of rounds won by computer: " + computerWonCounter);
+        System.out.println("Number of rounds won by " + username + ": " + userWinCounter);
+        System.out.println("Number of rounds won by computer: " + computerWinCounter);
         System.out.println("Number of draws: " + drawCounter);
         System.out.println("-------------------------------------------");
     }
